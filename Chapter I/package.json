@@ -5,7 +5,13 @@
   "repository": "git@github.com:leonardolsousa/Ignite-Node.git",
   "author": "Leonardo Sousa <leonardolsousa5@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "dev": "nodemon src/index.js"
+  },
   "dependencies": {
     "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
   }
 }
