@@ -12,6 +12,24 @@ const customers = [];
  * id - uuid
  * statement - []
  */
+
+//Middlewares
+function verifyIfExistsAccountCPF(request, response, next) {
+
+    const { cpf } = request.headers;
+
+    const customer = customers.find(
+        customer => customer.cpf === cpf);
+
+    if (!customer) {
+        return response.status(400).json({ error: "Customer not found!" });
+    }
+
+    request.customer = customer;
+
+    return next();
+}
+
 app.post("/account", (request, response) => {
 
     const { cpf, name } = request.body;
@@ -34,16 +52,11 @@ app.post("/account", (request, response) => {
     return response.status(201).send();
 })
 
-app.get("/statement", (request, response) => {
+//SE todas as rotas a seguir precisarem desse mids, pode utilizar assim ao invés de passar rota por rota
+//app.use(verifyIfExistsAccountCPF);
 
-    const { cpf } = request.headers;
-
-    const customer = customers.find(
-        customer => customer.cpf === cpf);
-
-    if (!customer) {
-        return response.status(400).json({ error: "Customer not found!" });
-    }
+app.get("/statement", verifyIfExistsAccountCPF, (request, response) => {
+    const { customer } = request;
 
     return response.json(customer.statement);
 });
